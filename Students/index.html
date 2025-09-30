@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>User - Student List</title>
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    table { margin-top: 20px; border-collapse: collapse; width: 60%; }
+    th, td { border: 1px solid black; padding: 8px; }
+  </style>
+</head>
+<body>
+  <h2>User - Student List</h2>
+  <table>
+    <thead>
+      <tr><th>S.no</th><th>Roll</th><th>Name</th></tr>
+    </thead>
+    <tbody id="studentTable"></tbody>
+
+    <button type='submit'id="btnContainer" onclick='databtn()'>Back</button>
+  </table>
+
+ 
+
+  <script>
+    let students = JSON.parse(localStorage.getItem("students")) || [];
+
+    function renderTable() {
+      const tbody = document.getElementById("studentTable");
+      tbody.innerHTML = "";
+      students.forEach((s, i)=> {
+        tbody.innerHTML += `<tr><td> ${i+1}</td><td>${s.roll}</td><td>${s.name}</td></tr>`;
+      });
+    }
+     
+    renderTable();
+
+    function databtns(render) {
+        // choose which link
+        const link = render 
+          ? '<a href="../admin/index.html">Back</a>' 
+          : '<a href="index.html">Not Render</a>';
+      
+        // put inside a div or body
+        document.getElementById("btnContainer").innerHTML = link;
+      }
+      
+      // Example: call with true or false
+      databtn(true);   // shows "Back"
+      databtn(false);  // shows "Not Render"
+
+
+      function databtn() {
+        const btnDiv = document.getElementById("btnContainer");
+        if (students.length > 0) {
+          btnDiv.innerHTML = '<a href="../admin/index.html">Back</a>';
+        } else {
+          btnDiv.innerHTML = '<a href="index.html">Not Render</a>';
+        }
+      }
+  
+      renderTable();
+      databtn();
+      
+  </script>
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin - Student Management</title>
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    input { margin: 5px; }
+    button { margin: 5px; }
+    table { margin-top: 20px; border-collapse: collapse; width: 60%; }
+    th, td { border: 1px solid black; padding: 8px; }
+  </style>
+</head>
+<body>
+  <h2>Admin - Student Management</h2>
+  <input type="text" id="roll" placeholder="Roll Number">
+  <input type="text" id="name" placeholder="Student Name">
+  <button onclick="addStudent()">Add Student</button>
+  <button type='submit'id="btnContainer" onclick='databtn()'>Back</button>
+  <table>
+    <thead>
+      <tr><th>S.NO</th><th>Roll</th><th>Name</th><th>Actions</th></tr>
+    </thead>
+    <tbody id="studentTable"></tbody>
+  </table>
+
+  <script>
+    let students = JSON.parse(localStorage.getItem("students")) || [{roll: "101", name: "Ram"}];
+    let editIndex = -1;
+
+    function saveData() {
+      localStorage.setItem("students", JSON.stringify(students));
+    }
+
+    function renderTable() {
+      const tbody = document.getElementById("studentTable");
+      tbody.innerHTML = "";
+      students.forEach((s, i) => {
+        tbody.innerHTML += `
+          <tr>
+            <td style="text-align:center">${i + 1}</td>
+            <td>${s.roll}</td>
+            <td>${s.name}</td>
+            <td>
+              <button onclick="editStudent(${i})">Edit</button>
+              <button onclick="deleteStudent(${i})">Delete</button>
+            </td>
+          </tr>
+        `;
+      });
+    }
+
+    function addStudent() {
+      const roll = document.getElementById("roll").value.trim();
+      const name = document.getElementById("name").value.trim();
+      if (!roll || !name) return alert("Enter roll & name!");
+
+      if (editIndex === -1) {
+        students.push({ roll, name });
+      } else {
+        students[editIndex] = { roll, name };
+        editIndex = -1;
+      }
+      saveData();
+      renderTable();
+      document.getElementById("roll").value = "";
+      document.getElementById("name").value = "";
+    }
+
+    function editStudent(i) {
+      document.getElementById("roll").value = students[i].roll;
+      document.getElementById("name").value = students[i].name;
+      editIndex = i;
+    }
+
+    function deleteStudent(i) {
+      students.splice(i, 1);
+      saveData();
+      renderTable();
+    }
+
+    renderTable();
+
+
+    function databtn() {
+        const btnDiv = document.getElementById("btnContainer");
+        if (students.length > 0) {
+          btnDiv.innerHTML = '<a href="../Students/index.html">View Student Page</a>';
+        } else {
+          btnDiv.innerHTML = '<a href="index.html">Not Render</a>';
+        }
+      }
+  
+      renderTable();
+      databtn();
+      
+  </script>
+</body>
+</html>
